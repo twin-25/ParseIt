@@ -1,0 +1,39 @@
+services:
+  db:
+    image: chromadb/chroma
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+    ports:
+      - "8001:8000"
+    volumes: 
+      - chroma_data:/chroma/chroma
+
+
+  server:
+    build: parsit/backend
+    container_name: parsit_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+ 
+  web:
+    build: parsit/frontend
+    container_name: parsit_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - server
+
+volumes:
+  chroma_data:
+
+
+  
