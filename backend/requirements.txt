@@ -1,0 +1,11 @@
+llama-index-core
+llama-index-llms-anthropic
+llama-index-embeddings-huggingface-api
+llama-index-vector-stores-chroma
+llama-index-readers-web
+fastapi
+pypdf
+chromadb
+python-decouple
+python-multipart
+uvicorn
