@@ -8,7 +8,7 @@ from decouple import config
 
 
 
-def ingest_documents(documents, session_id):
+async def ingest_documents(documents, session_id):
   db = chromadb.HttpClient(host="db", port=8000)
   chroma_collection = db.get_or_create_collection(session_id)
   vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
@@ -25,9 +25,9 @@ def ingest_documents(documents, session_id):
     vector_store=vector_store
   )
 
-  pipeline.run(documents=documents)
+  await pipeline.arun(documents=documents)
 
-  index = VectorStoreIndex.from_vector_store(vector_store)
+  index = VectorStoreIndex.from_vector_store(vector_store, embed_model=embed_model)
 
   return index
 

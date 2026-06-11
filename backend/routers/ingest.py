@@ -37,7 +37,7 @@ async def ingest(
   if not documents:
     raise HTTPException(status_code=400, detail="No content provided")
   
-  index = ingest_documents(documents, session_id)
+  index = await ingest_documents(documents, session_id)
 
   update_session_index(session_id, index)
 
