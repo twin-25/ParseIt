@@ -7,7 +7,7 @@ from llama_index.core.memory import ChatMemoryBuffer
 def build_chat_engine(index):
   
   llm = Anthropic(
-    model="claude-sonnet-4-20250514",
+    model="claude-haiku-4-5",
     api_key=config("ANTHROPIC_API_KEY")
   )
 
@@ -16,11 +16,12 @@ def build_chat_engine(index):
   chat_engine = index.as_chat_engine(
     llm=llm,
     memory=memory,
-    chat_mode="condense_plus_context",
+    chat_mode="context",
     system_prompt="""You are Parsit, an AI assistant that answers questions 
     strictly based on the provided documents. If the answer is not in the 
     documents, say 'I cannot find that information in the provided documents.'
-    Do not use any outside knowledge."""
+    Do not use any outside knowledge.""",
+    streaming=True
     
   )
 

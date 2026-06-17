@@ -3,6 +3,9 @@ from pydantic import BaseModel
 from services.session_stores import get_session, update_chat_engine
 from  services.chat_engine import build_chat_engine
 from fastapi.responses import StreamingResponse
+from llama_index.llms.anthropic import Anthropic
+from decouple import config
+from llama_index.core.llms import ChatMessage
 
 router = APIRouter()
 
@@ -26,9 +29,26 @@ async def chat(request: ChatRequest):
   async def event_stream():
     response = await chat_engine.astream_chat(request.message)
     async for token in response.async_response_gen():
+      print(f"TOKEN: {repr(token)}", flush=True)
+      token = token.replace("\n", "\\n") 
       yield f"data: {token}\n\n"
   
   return StreamingResponse(event_stream(), media_type="text/event-stream", headers={
     "Cache-Control": "no-cache",
     "X-Accel-Buffering": "no"
   })
+
+
+@router.get('/test-stream')
+async def test_stream():
+    
+    
+    llm = Anthropic(model="claude-haiku-4-5-20251001", api_key=config("ANTHROPIC_API_KEY"))
+    
+    async def gen():
+        response = await llm.astream_chat([ChatMessage(role="user", content="count from 1 to 20 slowly, one number per line")])
+        async for chunk in response:
+            print(f"RAW: {repr(chunk.delta)}", flush=True)
+            yield f"data: {chunk.delta}\n\n"
+    
+    return StreamingResponse(gen(), media_type="text/event-stream")
