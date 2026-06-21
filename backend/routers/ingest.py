@@ -20,7 +20,9 @@ async def ingest(
     documents.append(Document(text=text))
 
   if url:
-    url_docs = SimpleWebPageReader().load_data([url])
+    reader = SimpleWebPageReader(html_to_text=True)
+    url_docs = reader.load_data([url])
+    print(f"URL DOCS: {[doc.text[:200] for doc in url_docs]}", flush=True)
     documents.extend(url_docs)
 
   if files:

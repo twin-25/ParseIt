@@ -1,6 +1,7 @@
 from llama_index.llms.anthropic import Anthropic
 from decouple import config
 from llama_index.core.memory import ChatMemoryBuffer
+from llama_index.core.postprocessor import SimilarityPostprocessor
 
 
 
@@ -21,7 +22,9 @@ def build_chat_engine(index):
     strictly based on the provided documents. If the answer is not in the 
     documents, say 'I cannot find that information in the provided documents.'
     Do not use any outside knowledge.""",
-    streaming=True
+    streaming=True,
+    similarity_top_k=4,
+    #node_postprocessors=[SimilarityPostprocessor(similarity_cutoff=0.5)]
     
   )
 

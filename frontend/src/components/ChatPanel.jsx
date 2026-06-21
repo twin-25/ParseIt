@@ -1,54 +1,65 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 const ChatPanel = ({sessionId}) => {
   const[messages, setMessages] = useState([])
   const[isStreaming, setIsStreaming] = useState(false)
   const[currentMessage, setCurrentMessage] = useState('')
 
-  const handleSend = async () =>{
-    setMessages(prev=>[...prev, {role:'user', content:currentMessage}])
-    setCurrentMessage('')
-    setMessages(prev=>[...prev, {role:'assistant', content:''}])
-    setIsStreaming(true)
-    try{
-      const response = await fetch('http://localhost:8000/chat',{
+  const handleSend = async () => {
+  setMessages(prev => [...prev, { role: 'user', content: currentMessage }])
+  setCurrentMessage('')
+  setMessages(prev => [...prev, { role: 'assistant', content: '' }])
+  setIsStreaming(true)
+
+  try {
+    const response = await fetch('http://localhost:8000/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ session_id: sessionId, message: currentMessage })
     })
-    const reader = response.body.getReader()
-const decoder = new TextDecoder()
 
-while (true) {
-  const { done, value } = await reader.read()
-  if (done) break
-
-  const chunk = decoder.decode(value)
-  const lines = chunk.split('\n')
-
-  for (const line of lines) {
-    if (line.startsWith('data: ')) {
-      const token = line.replace('data: ', '').replace(/\\n/g, '\n')
-
-      setMessages(prev => {
-        const updated = [...prev]
-        updated[updated.length - 1].content += token
-        return updated
-      })
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`)
     }
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      const chunk = decoder.decode(value)
+      const lines = chunk.split('\n')
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const token = line.replace('data: ', '').replace(/\\n/g, '\n')
+
+          setMessages(prev => {
+            const updated = [...prev]
+            updated[updated.length - 1].content += token
+            return updated
+          })
+        }
+      }
+    }
+
+    setIsStreaming(false)
+  } catch (error) {
+    console.log(error)
+    setMessages(prev => {
+      const updated = [...prev]
+      updated[updated.length - 1].content = "Sorry, something went wrong. Please try again."
+      return updated
+    })
+    setIsStreaming(false)
   }
 }
-
-setIsStreaming(false)
-    }catch(error){
-      console.log(error)
-    }
-
-
-  }
   return (
     <div className="h-screen bg-surface flex flex-col">
+      
       <div className="bg-primary p-6">
         <h2 className="text-xl font-bold text-white">Chat With Your content</h2>
         
@@ -63,7 +74,10 @@ setIsStreaming(false)
 
           }`}
           >
-            {msg.content}
+            {msg.role === 'assistant' && msg.content === '' 
+  ? `parsit is thinking ...`
+  : <ReactMarkdown>{msg.content}</ReactMarkdown>
+}
           </div>
         ))}
       </div>

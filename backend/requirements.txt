@@ -11,3 +11,4 @@ python-multipart
 uvicorn
 sentence-transformers
 llama-index-embeddings-huggingface
+trafilatura

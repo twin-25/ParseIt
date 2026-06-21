@@ -31,3 +31,12 @@ async def ingest_documents(documents, session_id):
 
   return index
 
+def delete_collection(session_id):
+  client = chromadb.HttpClient(host="db", port=8000)
+  try:
+    client.delete_collection(name=session_id)
+  except Exception as e:
+    print(f"Could not delete collection {session_id}: {e}")
+
+
+

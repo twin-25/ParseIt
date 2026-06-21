@@ -1,6 +1,8 @@
 import React from 'react'
+import { useDeleteSessionMutation } from '../api/parsitApi'
 
 const Navbar = ({ sessionId, onEndSession }) => {
+  
   return (
     <nav className="bg-surface border-b border-border px-6 py-4 flex justify-between items-center shadow-sm">
       <div className="flex items-center gap-2">

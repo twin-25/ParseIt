@@ -15,7 +15,13 @@ function IngestPanel({ sessionId }) {
   }
 
   return (
-    <div className="h-screen bg-surface flex flex-col">
+    <div className="h-screen bg-surface flex flex-col relative">
+      {isLoading && (
+      <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center gap-3 z-10">
+        <div className="w-10 h-10 border-4 border-primary-light border-t-primary rounded-full animate-spin"></div>
+        <p className="text-text font-medium">Ingesting your content...</p>
+      </div>
+    )}
       <div className="bg-primary p-6">
         <h2 className="text-xl font-bold text-white">Add Content</h2>
         <p className="text-primary-light text-sm mt-1">Paste text, URL or upload files</p>

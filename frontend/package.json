@@ -13,7 +13,8 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "@reduxjs/toolkit": "^2.0.0",
-    "react-redux": "^9.0.0"
+    "react-redux": "^9.0.0",
+    "react-markdown": "^9.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

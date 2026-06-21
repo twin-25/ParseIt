@@ -2,11 +2,20 @@ import { useState } from 'react'
 import IngestPannel from './components/IngestPanel'
 import ChatPannel from './components/ChatPanel'
 import Navbar from './components/Navbar'
-import { useCreateSessionMutation } from './api/parsitApi'
+import { useCreateSessionMutation, useDeleteSessionMutation } from './api/parsitApi'
 
 function App() {
   const [sessionId, setSessionId] = useState(null)
   const [createSession, { isLoading }] = useCreateSessionMutation()
+  const[deleteSession] = useDeleteSessionMutation()
+
+
+  const handleEndSession = async ()=>{
+
+    await deleteSession(sessionId)
+    setSessionId(null)
+      
+    }
 
   const handleStartSession = async () => {
     const result = await createSession().unwrap()
@@ -33,7 +42,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar sessionId={sessionId} onEndSession={() => setSessionId(null)} />
+      <Navbar sessionId={sessionId} onEndSession={handleEndSession} />
       <div className="flex flex-1">
         <div className="w-1/2 border-r border-border bg-surface">
           <IngestPannel sessionId={sessionId} />
