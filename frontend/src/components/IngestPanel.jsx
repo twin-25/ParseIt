@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useIngestDataMutation } from '../api/parsitApi'
+import DocList from './DocList'
 
 function IngestPanel({ sessionId }) {
   const [text, setText] = useState('')
@@ -71,6 +72,8 @@ function IngestPanel({ sessionId }) {
         >
           {isLoading ? 'Ingesting...' : 'Ingest'}
         </button>
+
+        <DocList session_id={sessionId}/>
       </div>
     </div>
   )

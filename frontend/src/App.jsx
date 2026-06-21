@@ -3,6 +3,7 @@ import IngestPannel from './components/IngestPanel'
 import ChatPannel from './components/ChatPanel'
 import Navbar from './components/Navbar'
 import { useCreateSessionMutation, useDeleteSessionMutation } from './api/parsitApi'
+import DocList from './components/DocList'
 
 function App() {
   const [sessionId, setSessionId] = useState(null)
@@ -50,6 +51,9 @@ function App() {
         <div className="w-1/2 bg-background">
           <ChatPannel sessionId={sessionId} />
         </div>
+        
+        
+        
       </div>
     </div>
   )

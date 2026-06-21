@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const parsitApi = createApi({
   reducerPath: 'parsitApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  tagTypes:['Documents'],
   endpoints: (build) => ({
     createSession: build.mutation({
       query: () => ({
@@ -28,9 +29,16 @@ export const parsitApi = createApi({
           method: 'POST',
           body: formData
         }
+        
       },
+      invalidatesTags:['Documents'],
     }),
+    getDocuments: build.query({
+      query:(session_id) => `/sessions/${session_id}/documents`,
+      providesTags:['Documents'],
+    }),
+
   })
 })
 
-export const { useCreateSessionMutation, useDeleteSessionMutation, useIngestDataMutation } = parsitApi
+export const { useCreateSessionMutation, useDeleteSessionMutation, useIngestDataMutation, useGetDocumentsQuery } = parsitApi

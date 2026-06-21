@@ -19,3 +19,9 @@ def delete_session(session_id: str):
   remove_session(session_id)
   return {"message":"session deleted"}
 
+@router.get('/sessions/{session_id}/documents', status_code=200)
+def get_document_names(session_id: str):
+  session = get_session(session_id)
+  if not session:
+    raise HTTPException(status_code=404, detail="Session not found")
+  return {"documents": session.get("documents", [])}

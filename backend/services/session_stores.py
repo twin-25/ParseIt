@@ -3,7 +3,8 @@ sessions = {}
 def create_session(session_id, vector_index, chat):
   sessions[session_id] = {
     "index": vector_index,
-    "chat_engine": chat
+    "chat_engine": chat,
+    "documents": [],
 }
 
 
@@ -22,4 +23,12 @@ def update_session_index(session_id, index):
 def update_chat_engine(session_id, chat_engine):
     if session_id in sessions:
         sessions[session_id]["chat_engine"] = chat_engine
+
+def update_documents(session_id, names):
+   if session_id in sessions:
+    for name in names:
+       sessions[session_id]["documents"].append(name)
+
+
+       
 
